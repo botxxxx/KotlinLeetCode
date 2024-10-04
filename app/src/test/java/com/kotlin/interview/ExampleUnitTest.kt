@@ -1,15 +1,14 @@
 package com.kotlin.interview
 
 import org.junit.Test
+import java.util.LinkedList
 
-import org.junit.Assert.*
-import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
-import kotlin.math.sqrt
 
 class ExampleUnitTest {
-    //@Test
+
+    @Test //02
     fun maxArea() {
         println("(mind)Container With Most Water")
         val nums = intArrayOf(1, 3, 4, 6, 2, 9, 8, 5)
@@ -36,7 +35,7 @@ class ExampleUnitTest {
         return maxArea
     }
 
-    //@Test
+    @Test //03
     fun validMountainArray() {
         println("(easy)Valid Mountain Array")
         val arr = intArrayOf(1, 3, 4, 6, 4, 3, 2, 1)
@@ -62,6 +61,7 @@ class ExampleUnitTest {
         println("Space complexity O(1)")
     }
 
+    @Test //04
     fun numRescueBoats() {
         println("(mind)Boats to save people")
         val people = intArrayOf(1, 2, 1, 3, 2, 3, 1, 2, 3, 2, 1)
@@ -86,6 +86,7 @@ class ExampleUnitTest {
         return boats
     }
 
+    @Test //05
     fun moveZeroes() {
         println("(easy)Movie zeros")
         val nums = intArrayOf(0, 1, 0, 3, 12, 9, 0)
@@ -109,7 +110,7 @@ class ExampleUnitTest {
         }
     }
 
-    //@Test
+    @Test //06
     fun lengthOfLongestSubstring() {
         println("(mind)Longest Substring Without Repeating Characters")
         val s = "abcdefbdabdcaadbeb"
@@ -136,7 +137,7 @@ class ExampleUnitTest {
         println("Space complexity O(min(m, n)")
     }
 
-    //@Test
+    @Test //07
     fun searchRange() {
         println("(easy)Find first and last position of element in sorted array")
         val nums = intArrayOf(5, 7, 7, 8, 8, 10)
@@ -187,6 +188,7 @@ class ExampleUnitTest {
         return result
     }
 
+    @Test //08
     fun firstBadVersion() {
         println("(easy)first bad version")
         val n = 10
@@ -214,6 +216,7 @@ class ExampleUnitTest {
         return start
     }
 
+    @Test //09
     fun missingNumber() {
         println("(easy)missing number")
         val nums = intArrayOf(3, 0, 1)
@@ -228,7 +231,7 @@ class ExampleUnitTest {
         println("Space complexity O(1)")
     }
 
-    @Test
+    @Test //10
     fun countPrimes() {
         println("(mind)count primes")
         val n = 100
@@ -256,6 +259,7 @@ class ExampleUnitTest {
         println("Space complexity O(n)")
     }
 
+    @Test //11
     fun singleNumber() {
         println("(easy)single number")
         val nums = intArrayOf(4, 1, 2, 1, 2)
@@ -272,5 +276,189 @@ class ExampleUnitTest {
         println("Space complexity O(1)")
     }
 
+    @Test //18
+    fun minimumWindowSubstring() {
+        println("(hard)minimum window substring")
+        val s = "ADOBECODEBANC"
+        val t = "ABC"
+        println("result:${minWindow(s, t)}")
+    }
 
+    private fun minWindow(s: String, t: String): String {
+        if (s.isEmpty() || t.isEmpty()) return ""
+
+        val charCount = IntArray(128) // Assuming ASCII characters
+        for (char in t) {
+            charCount[char.code]++
+        }
+
+        var left = 0
+        var right = 0
+        var minWindow = ""
+        var minLength = Int.MAX_VALUE
+        var count = t.length
+        while (right < s.length) {
+            val endCode = s[right].code
+            if (charCount[endCode] > 0) count--
+            charCount[endCode]--
+            right++
+
+            while (count == 0) {
+                if (right - left < minLength) {
+                    minLength = right - left
+                    minWindow = s.substring(left, right)
+                }
+                val startCode = s[left].code
+                charCount[startCode]++
+                if (charCount[startCode] > 0) count++
+                left++
+            }
+        }
+
+        return minWindow
+    }
+
+    @Test //19
+    fun groupAnagrams() {
+        println("(mind)group anagrams")
+        val strs = arrayOf("eat", "tea", "tan", "ate", "nat", "bat")
+        println("result:${groupAnagrams(strs)}")
+    }
+
+    private fun groupAnagrams(strs: Array<String>): List<List<String>> {
+        if (strs.size <= 1) return listOf(strs.toList())
+        val result = mutableListOf<List<String>>()
+        val map = mutableMapOf<String, MutableList<String>>()
+
+        for (str in strs) {
+            val charCount = IntArray(26)
+            for (char in str) {
+                charCount[char - 'a']++
+            }
+
+            val key = charCount.contentToString() // Use charCount as key
+            map.computeIfAbsent(key) { mutableListOf() }.add(str)
+        }
+
+        result.addAll(map.values)
+        return result
+        println("Time complexity O(nklogk)")
+        println("Space complexity O(nk)")
+    }
+
+    @Test //20
+    fun LRUCache() {
+        println("(mind)LRU cache")
+        val cache = LRUCache(2)
+        cache.put(1, 1)
+        cache.put(2, 2)
+        println(cache.get(1)) // Output: 1
+        cache.put(3, 3)
+        println(cache.get(2)) // Output: -1
+        cache.put(4, 4)
+        println(cache.get(1)) // Output: -1
+        println(cache.get(3)) // Output: 3
+        println(cache.get(4)) // Output: 4
+
+        println("result:${cache.get(1)}")
+        println("Time complexity O(1)")
+        println("Space complexity O(n)")
+    }
+
+    private class LRUCache(val capacity: Int) {
+        val cache = LinkedHashMap<Int, Int>(capacity, 0.75f, true)
+
+        fun get(key: Int): Int {
+            return cache[key] ?: -1
+        }
+
+        fun put(key: Int, value: Int) {
+            if (!cache.containsKey(key) && cache.size == capacity) {
+                cache.remove(cache.keys.iterator().next()) // Remove LRU entry
+            }
+            cache[key] = value
+        }
+    }
+
+    @Test //32
+    fun maximumDepthOfABinaryTree() {
+        println("(easy)maximum depth of binary tree")
+        val root = TreeNode(3)
+        root.left = TreeNode(9)
+        root.right = TreeNode(20)
+        root.right!!.left = TreeNode(15)
+        root.right!!.right = TreeNode(7)
+
+        val depth = maxDepth(root)
+        println("Maximum depth of the tree: $depth") // Output: 3
+        println("Time complexity O(n)")
+        println("Space complexity O(n)")
+    }
+
+    class TreeNode(var `val`: Int) {
+        var left: TreeNode? = null
+        var right: TreeNode? = null
+    }
+
+    private fun arrayToTreeNode(arr: Array<Int?>): TreeNode? {
+        if (arr.isEmpty() || arr[0] == null) return null
+
+        val root = TreeNode(arr[0]!!)
+        val queue = LinkedList<TreeNode?>()
+        queue.add(root)
+
+        var i = 1
+        while (i < arr.size) {
+            val current = queue.poll()
+            if (current != null) {
+                if (arr[i] != null) {
+                    current.left = TreeNode(arr[i]!!)
+                    queue.add(current.left)
+                }
+                i++
+                if (i < arr.size && arr[i] != null) {
+                    current.right = TreeNode(arr[i]!!)
+                    queue.add(current.right)
+                }
+                i++
+            }
+        }
+
+        return root
+    }
+
+    private fun maxDepth(root: TreeNode?, currentDepth: Int = 1): Int {
+        if (root == null) {
+            return 0
+        }
+        if (root.left == null && root.right == null) return currentDepth
+        val right = maxDepth(root.right, currentDepth + 1)
+        val left = maxDepth(root.left, currentDepth + 1)
+        return max(right, left)
+    }
+
+    @Test //35
+    fun kthSmallestInBST() {
+        println("(mind)kth smallest element in a BST")
+        val arr = arrayOf(5, 3, 6, 2, 4, null, null, 1)
+        val root = arrayToTreeNode(arr)
+        println("result:${kthSmallest(root, 2)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(n)")
+    }
+
+    private fun kthSmallest(root: TreeNode?, k: Int): Int {
+        if (root == null || k <= 0) return -1
+        var count = 0
+        var result = -1
+        fun inorder(node: TreeNode?) {
+            if (node == null || count >= k) return
+            inorder(node.left)
+            count++
+            if (count == k) result = node.`val`
+            inorder(node.right)
+        }
+        inorder(root)
+        return result
+    }
 }
