@@ -331,7 +331,7 @@ class ExampleUnitTest {
         return result.toString()
     }
 
-    @Test //15
+    @Test //14
     fun twoSum() {
         println("(easy)two sum")
         val nums = intArrayOf(2, 7, 11, 15)
@@ -342,12 +342,12 @@ class ExampleUnitTest {
     }
 
     private fun twoSum(nums: IntArray, target: Int): IntArray {
-        if(nums.size == 2) {
+        if (nums.size == 2) {
             return intArrayOf(0, 1)
         } else {
             val hashMap = HashMap<Int, Int>(nums.size)
             nums.forEachIndexed { index, i ->
-                if(hashMap.containsKey(target - i)) {
+                if (hashMap.containsKey(target - i)) {
                     return intArrayOf(hashMap[target - i]!!, index)
                 } else {
                     hashMap[i] = index
@@ -355,6 +355,58 @@ class ExampleUnitTest {
             }
         }
         return intArrayOf()
+    }
+
+    @Test //15
+    fun arrayContainsDuplicate() {
+        println("(easy)contains duplicate")
+        val nums = intArrayOf(1, 2, 3, 1)
+        println("result:${containsDuplicate(nums)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(n)")
+    }
+
+    private fun containsDuplicate(nums: IntArray): Boolean {
+        val hashSet = HashSet<Int>()
+        nums.forEach {
+            if (hashSet.contains(it)) {
+                return true
+            } else {
+                hashSet.add(it)
+            }
+        }
+        return false
+    }
+
+    @Test //17
+    fun majorityElement() {
+        println("(easy)majority element")
+        val nums = intArrayOf(2, 2, 1, 1, 1, 2, 2)
+        println("result:${majorityElement(nums)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(1)")
+    }
+
+    private fun majorityElement(nums: IntArray): Int {
+        val majorityCount = nums.size / 2
+        var majority = 0
+        var current = -1
+        nums.onEach {
+            if (current != it) {
+                if (majority == 0) {
+                    majority = 1
+                    current = it
+                } else {
+                    majority--
+                }
+            } else {
+                majority++
+                if (majority > majorityCount) {
+                    return current
+                }
+            }
+        }
+        return current
     }
 
     @Test //18
