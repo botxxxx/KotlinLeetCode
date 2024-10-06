@@ -2,6 +2,7 @@ package com.kotlin.interview
 
 import org.junit.Test
 import java.util.LinkedList
+import java.util.Stack
 
 import kotlin.math.max
 import kotlin.math.min
@@ -13,6 +14,8 @@ class ExampleUnitTest {
         println("(mind)Container With Most Water")
         val nums = intArrayOf(1, 3, 4, 6, 2, 9, 8, 5)
         println("output:${maxArea(nums)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(1)")
     }
 
     private fun maxArea(nums: IntArray): Int {
@@ -30,8 +33,6 @@ class ExampleUnitTest {
                 r--
             }
         }
-        println("Time complexity O(n)")
-        println("Space complexity O(1)")
         return maxArea
     }
 
@@ -40,6 +41,8 @@ class ExampleUnitTest {
         println("(easy)Valid Mountain Array")
         val arr = intArrayOf(1, 3, 4, 6, 4, 3, 2, 1)
         println("result:${validMountainArray(arr)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(1)")
     }
 
     private fun validMountainArray(arr: IntArray): Boolean {
@@ -57,8 +60,6 @@ class ExampleUnitTest {
             }
             i == arr.size
         }
-        println("Time complexity O(n)")
-        println("Space complexity O(1)")
     }
 
     @Test //04
@@ -115,6 +116,8 @@ class ExampleUnitTest {
         println("(mind)Longest Substring Without Repeating Characters")
         val s = "abcdefbdabdcaadbeb"
         println("output:${lengthOfLongestSubstring(s)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(min(m, n)")
     }
 
     private fun lengthOfLongestSubstring(s: String): Int {
@@ -133,8 +136,6 @@ class ExampleUnitTest {
             }
         }
         return maxLength
-        println("Time complexity O(n)")
-        println("Space complexity O(min(m, n)")
     }
 
     @Test //07
@@ -143,13 +144,13 @@ class ExampleUnitTest {
         val nums = intArrayOf(5, 7, 7, 8, 8, 10)
         val target = 8
         println("output:${searchRange(nums, target).joinToString()}")
+        println("Time complexity O(logn)")
+        println("Space complexity O(1)")
     }
 
     private fun searchRange(nums: IntArray, target: Int): IntArray {
         if (nums.isEmpty() || target == -1) return intArrayOf(-1, -1)
         return intArrayOf(findFirstPosition(nums, target), findLastPosition(nums, target))
-        println("Time complexity O(logn)")
-        println("Space complexity O(1)")
     }
 
     private fun findFirstPosition(input: IntArray, target: Int): Int {
@@ -193,12 +194,12 @@ class ExampleUnitTest {
         println("(easy)first bad version")
         val n = 10
         println("output:${firstBadVersion(n)}")
+        println("Time complexity O(logn)")
+        println("Space complexity O(1)")
     }
 
     private fun isBadVersion(version: Int): Boolean {
         return version >= 4
-        println("Time complexity O(logn)")
-        println("Space complexity O(1)")
     }
 
     private fun firstBadVersion(n: Int): Int {
@@ -221,14 +222,14 @@ class ExampleUnitTest {
         println("(easy)missing number")
         val nums = intArrayOf(3, 0, 1)
         println("output:${missingNumber(nums)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(1)")
     }
 
     private fun missingNumber(nums: IntArray): Int {
         val size = nums.size
         val sum = size * (size + 1) / 2
         return sum - nums.sum()
-        println("Time complexity O(n)")
-        println("Space complexity O(1)")
     }
 
     @Test //10
@@ -236,6 +237,8 @@ class ExampleUnitTest {
         println("(mind)count primes")
         val n = 100
         println("result:${countPrimes(n)}")
+        println("Time complexity O(nloglogn)")
+        println("Space complexity O(n)")
     }
 
     private fun countPrimes(n: Int): Int {
@@ -255,8 +258,6 @@ class ExampleUnitTest {
             }
         }
         return count
-        println("Time complexity O(nloglogn)")
-        println("Space complexity O(n)")
     }
 
     @Test //11
@@ -264,6 +265,8 @@ class ExampleUnitTest {
         println("(easy)single number")
         val nums = intArrayOf(4, 1, 2, 1, 2)
         println("result:${singleNumber(nums)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(1)")
     }
 
     private fun singleNumber(nums: IntArray): Int {
@@ -272,8 +275,6 @@ class ExampleUnitTest {
             single = single xor num
         }
         return single
-        println("Time complexity O(n)")
-        println("Space complexity O(1)")
     }
 
     @Test //18
@@ -282,6 +283,8 @@ class ExampleUnitTest {
         val s = "ADOBECODEBANC"
         val t = "ABC"
         println("result:${minWindow(s, t)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(n)")
     }
 
     private fun minWindow(s: String, t: String): String {
@@ -314,7 +317,6 @@ class ExampleUnitTest {
                 left++
             }
         }
-
         return minWindow
     }
 
@@ -323,6 +325,8 @@ class ExampleUnitTest {
         println("(mind)group anagrams")
         val strs = arrayOf("eat", "tea", "tan", "ate", "nat", "bat")
         println("result:${groupAnagrams(strs)}")
+        println("Time complexity O(nklogk)")
+        println("Space complexity O(nk)")
     }
 
     private fun groupAnagrams(strs: Array<String>): List<List<String>> {
@@ -342,8 +346,6 @@ class ExampleUnitTest {
 
         result.addAll(map.values)
         return result
-        println("Time complexity O(nklogk)")
-        println("Space complexity O(nk)")
     }
 
     @Test //20
@@ -443,8 +445,8 @@ class ExampleUnitTest {
         val arr = arrayOf(5, 3, 6, 2, 4, null, null, 1)
         val root = arrayToTreeNode(arr)
         println("result:${kthSmallest(root, 2)}")
-        println("Time complexity O(n)")
-        println("Space complexity O(n)")
+        println("Time complexity O(H+k)")
+        println("Space complexity O(logn)")
     }
 
     private fun kthSmallest(root: TreeNode?, k: Int): Int {
@@ -460,5 +462,44 @@ class ExampleUnitTest {
         }
         inorder(root)
         return result
+    }
+
+    @Test //38
+    fun minStack() {
+        println("(easy)min stack")
+        val minStack = MinStack()
+        println("result:[${minStack.push(2)},${minStack.push(0)},${minStack.push(3)}," +
+                "${minStack.getMin()},${minStack.pop()},${minStack.pop()},${minStack.getMin()}]")
+        println("time complexity O(1)")
+        println("space complexity O(n)")
+    }
+
+    class MinStack{
+        private val stack = Stack<Int>()
+        private val minStack = Stack<Int>()
+
+        fun push(x: Int) :Int{
+            stack.push(x)
+            if (minStack.isEmpty() || x <= minStack.peek()) {
+                minStack.push(x)
+            }
+            return stack.peek()
+        }
+
+        fun pop() :Int{
+            val x = stack.pop()
+            if (x == minStack.peek()) {
+                minStack.pop()
+            }
+            return stack.peek()
+        }
+
+        fun top(): Int {
+            return stack.peek()
+        }
+
+        fun getMin(): Int {
+            return minStack.peek()
+        }
     }
 }
