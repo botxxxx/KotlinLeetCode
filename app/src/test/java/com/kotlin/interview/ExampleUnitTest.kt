@@ -277,6 +277,86 @@ class ExampleUnitTest {
         return single
     }
 
+    @Test //12
+    fun robotReturnToOrigin() {
+        println("(easy)robot return to origin")
+        val moves = "URLDDURL"
+        println("result:${judgeCircle(moves)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(1)")
+    }
+
+    private fun judgeCircle(moves: String): Boolean {
+        var x = 0
+        var y = 0
+        moves.toCharArray().onEach { c ->
+            when (c) {
+                'U' -> y++
+                'D' -> y--
+                'L' -> x--
+                'R' -> x++
+            }
+        }
+        return x == 0 && y == 0
+    }
+
+    @Test //13
+    fun addBinary() {
+        println("(easy)add binary")
+        val a = "11"
+        val b = "1"
+        println("result:${addBinary(a, b)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(n)")
+    }
+
+    private fun addBinary(a: String, b: String): String {
+        val result = StringBuilder()
+        var carry = 0
+        var i = a.length - 1
+        var j = b.length - 1
+        while (i >= 0 || j >= 0 || carry == 1) {
+            var sum = carry
+            if (i >= 0) {
+                sum += a[i].digitToInt()
+                i--
+            }
+            if (j >= 0) {
+                sum += b[j].digitToInt()
+                j--
+            }
+            result.insert(0, sum % 2)
+            carry = sum / 2
+        }
+        return result.toString()
+    }
+
+    @Test //15
+    fun twoSum() {
+        println("(easy)two sum")
+        val nums = intArrayOf(2, 7, 11, 15)
+        val target = 9
+        println("result:${twoSum(nums, target).joinToString()}")
+        println("Time complexity O(n)")
+        println("Space complexity O(n)")
+    }
+
+    private fun twoSum(nums: IntArray, target: Int): IntArray {
+        if(nums.size == 2) {
+            return intArrayOf(0, 1)
+        } else {
+            val hashMap = HashMap<Int, Int>(nums.size)
+            nums.forEachIndexed { index, i ->
+                if(hashMap.containsKey(target - i)) {
+                    return intArrayOf(hashMap[target - i]!!, index)
+                } else {
+                    hashMap[i] = index
+                }
+            }
+        }
+        return intArrayOf()
+    }
+
     @Test //18
     fun minimumWindowSubstring() {
         println("(hard)minimum window substring")
@@ -394,7 +474,7 @@ class ExampleUnitTest {
         val depth = maxDepth(root)
         println("Maximum depth of the tree: $depth") // Output: 3
         println("Time complexity O(n)")
-        println("Space complexity O(n)")
+        println("Space complexity O(h)")
     }
 
     class TreeNode(var `val`: Int) {
@@ -429,14 +509,14 @@ class ExampleUnitTest {
         return root
     }
 
-    private fun maxDepth(root: TreeNode?, currentDepth: Int = 1): Int {
-        if (root == null) {
-            return 0
+    private fun maxDepth(root: TreeNode?, currentDepth: Int = 1): Int = when {
+        root == null -> 0
+        root.left == null && root.right == null -> currentDepth
+        else -> {
+            val right = maxDepth(root.right, currentDepth + 1)
+            val left = maxDepth(root.left, currentDepth + 1)
+            max(right, left)
         }
-        if (root.left == null && root.right == null) return currentDepth
-        val right = maxDepth(root.right, currentDepth + 1)
-        val left = maxDepth(root.left, currentDepth + 1)
-        return max(right, left)
     }
 
     @Test //35
@@ -445,8 +525,8 @@ class ExampleUnitTest {
         val arr = arrayOf(5, 3, 6, 2, 4, null, null, 1)
         val root = arrayToTreeNode(arr)
         println("result:${kthSmallest(root, 2)}")
-        println("Time complexity O(H+k)")
-        println("Space complexity O(logn)")
+        println("Time complexity O(n)")
+        println("Space complexity O(h)")
     }
 
     private fun kthSmallest(root: TreeNode?, k: Int): Int {
@@ -468,17 +548,20 @@ class ExampleUnitTest {
     fun minStack() {
         println("(easy)min stack")
         val minStack = MinStack()
-        println("result:[${minStack.push(2)},${minStack.push(0)},${minStack.push(3)}," +
-                "${minStack.getMin()},${minStack.pop()},${minStack.pop()},${minStack.getMin()}]")
-        println("time complexity O(1)")
-        println("space complexity O(n)")
+        println(
+            "result:[${minStack.push(2)},${minStack.push(0)},${minStack.push(3)}," +
+                    "${minStack.getMin()},${minStack.pop()},${minStack.pop()}," +
+                    "${minStack.getMin()}]"
+        )
+        println("Time complexity O(1)")
+        println("Space complexity O(n)")
     }
 
-    class MinStack{
+    class MinStack {
         private val stack = Stack<Int>()
         private val minStack = Stack<Int>()
 
-        fun push(x: Int) :Int{
+        fun push(x: Int): Int {
             stack.push(x)
             if (minStack.isEmpty() || x <= minStack.peek()) {
                 minStack.push(x)
@@ -486,7 +569,7 @@ class ExampleUnitTest {
             return stack.peek()
         }
 
-        fun pop() :Int{
+        fun pop(): Int {
             val x = stack.pop()
             if (x == minStack.peek()) {
                 minStack.pop()
@@ -502,4 +585,5 @@ class ExampleUnitTest {
             return minStack.peek()
         }
     }
+
 }
