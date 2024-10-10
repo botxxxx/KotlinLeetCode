@@ -786,7 +786,7 @@ class ExampleUnitTest {
                 }
             }
         }
-        if (dp[amount] > amount) return -1
-        return dp[amount]
+
+        return if (dp[amount] == amount + 1) -1 else dp[amount]
     }
 }
