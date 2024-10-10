@@ -483,18 +483,18 @@ class ExampleUnitTest {
     @Test //20
     fun LRUCache() {
         println("(mind)LRU cache")
-        val cache = LRUCache(2)
-        cache.put(1, 1)
-        cache.put(2, 2)
-        println(cache.get(1)) // Output: 1
-        cache.put(3, 3)
-        println(cache.get(2)) // Output: -1
-        cache.put(4, 4)
-        println(cache.get(1)) // Output: -1
-        println(cache.get(3)) // Output: 3
-        println(cache.get(4)) // Output: 4
+        val lruCache = LRUCache(4)
+        lruCache.put(1, 1)
+        lruCache.put(2, 2)
+        lruCache.get(1)
+        lruCache.put(3, 3)
+        lruCache.get(2) // Output: -1
+        lruCache.put(4, 4)
+        lruCache.get(1) // Output: -1
+        lruCache.get(3) // Output: 3
+        lruCache.get(4) // Output: 4
 
-        println("result:${cache.get(1)}")
+        println("result:${lruCache.print()}")
         println("Time complexity O(1)")
         println("Space complexity O(n)")
     }
@@ -502,15 +502,22 @@ class ExampleUnitTest {
     private class LRUCache(val capacity: Int) {
         val cache = LinkedHashMap<Int, Int>(capacity, 0.75f, true)
 
+        fun print() {
+            println("${cache.values.reversed()} lest:" + cache.keys.iterator().next())
+        }
+
         fun get(key: Int): Int {
-            return cache[key] ?: -1
+            val x = cache[key] ?: -1
+            print()
+            return x
         }
 
         fun put(key: Int, value: Int) {
             if (!cache.containsKey(key) && cache.size == capacity) {
-                cache.remove(cache.keys.iterator().next()) // Remove LRU entry
+                cache.remove(cache.keys.iterator().next())
             }
             cache[key] = value
+            print()
         }
     }
 
@@ -524,7 +531,7 @@ class ExampleUnitTest {
         root.right!!.right = TreeNode(7)
 
         val depth = maxDepth(root)
-        println("Maximum depth of the tree: $depth") // Output: 3
+        println("Maximum depth of the tree: $depth")
         println("Time complexity O(n)")
         println("Space complexity O(h)")
     }
@@ -574,9 +581,9 @@ class ExampleUnitTest {
     @Test //35
     fun kthSmallestInBST() {
         println("(mind)kth smallest element in a BST")
-        val arr = arrayOf(5, 3, 6, 2, 4, null, null, 1)
+        val arr = arrayOf(9, 5, 14, 3, 7, null, null, 1)
         val root = arrayToTreeNode(arr)
-        println("result:${kthSmallest(root, 2)}")
+        println("result:${arr.indices.filter { it != 0 }.joinToString { "${kthSmallest(root, it)}" }}")
         println("Time complexity O(n)")
         println("Space complexity O(h)")
     }
@@ -586,27 +593,124 @@ class ExampleUnitTest {
         var count = 0
         var result = -1
         fun inorder(node: TreeNode?) {
-            if (node == null || count >= k) return
+            if (node?.left == null || count >= k) return
             inorder(node.left)
             count++
-            if (count == k) result = node.`val`
-            inorder(node.right)
+            if (count == k) {
+                result = node.`val`
+                return
+            } else {
+                inorder(node.right)
+            }
         }
         inorder(root)
         return result
     }
 
+    @Test //36
+    fun serializeAndDeserializeBinaryTree() {
+        println("(hard)serialize and deserialize binary tree")
+        val treeNode = TreeNode(1).apply {
+            left = TreeNode(2)
+            right = TreeNode(3)
+            right?.left = TreeNode(4)
+            right?.right = TreeNode(5)
+        }
+        val serialize = serialize(treeNode)
+        println("serialize:$serialize")
+        val deserialize = deserialize(serialize)
+        println("deserialize:${serialize(deserialize)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(n)")
+    }
+
+    private fun serialize(root: TreeNode?): String {
+        if (root == null) return ""
+
+        val sb = StringBuilder()
+        val queue = LinkedList<TreeNode?>()
+        queue.add(root)
+
+        while (queue.isNotEmpty()) {
+            val node = queue.poll()
+            if (node != null) {
+                if (sb.isNotEmpty()) {
+                    sb.append(",")
+                }
+                sb.append(node.`val`)
+                queue.add(node.left)
+                queue.add(node.right)
+            } else {
+                if (sb.isNotEmpty()) {
+                    sb.append(",")
+                }
+                sb.append("null")
+            }
+        }
+        return sb.toString()
+    }
+
+    private fun deserialize(data: String): TreeNode? {
+        if (data.isEmpty()) return null
+        val arr = data.split(",").toTypedArray()
+        val root = TreeNode(arr[0].toInt())
+        var i = 1
+        val queue = LinkedList<TreeNode?>()
+        queue.add(root)
+        while (i < arr.size) {
+            val node = queue.poll()
+            if (node != null) {
+                if (arr[i] != "null") {
+                    node.left = TreeNode(arr[i].toInt())
+                    queue.add(node.left)
+                }
+                i++
+                if (i < arr.size && arr[i] != "null") {
+                    node.right = TreeNode(arr[i].toInt())
+                    queue.add(node.right)
+                }
+                i++
+            }
+        }
+        return root
+    }
+
+    @Test //37
+    fun binaryTreeMaximumPathSum() {
+        println("(hard)binary tree maximum path sum")
+        val arr: Array<Int?> = arrayOf(1, 2, 3, 4, 5, 6, 7)
+        val root = arrayToTreeNode(arr)
+        println("result:${maxPathSum(root)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(h)")
+    }
+
+    private fun maxPathSum(root: TreeNode?): Int {
+        var maxSum = Int.MIN_VALUE
+        fun dfs(root: TreeNode?): Int {
+            if (root == null) return 0
+            val leftSum = maxOf(0, dfs(root.left))
+            val rightSum = maxOf(0, dfs(root.right))
+            val priceSum = leftSum + rightSum + root.`val`
+            maxSum = maxOf(maxSum, priceSum)
+            return maxOf(leftSum, rightSum) + root.`val`
+        }
+        dfs(root)
+        return maxSum
+    }
+
     @Test //38
     fun minStack() {
         println("(easy)min stack")
-        val minStack = MinStack()
-        println(
-            "result:[${minStack.push(2)},${minStack.push(0)},${minStack.push(3)}," +
-                    "${minStack.getMin()},${minStack.pop()},${minStack.pop()}," +
-                    "${minStack.getMin()}]"
-        )
+        val minStack = MinStack().apply {
+            push(5)
+            push(6)
+            push(10)
+            push(1)
+        }
+        println("result:[${minStack.pop()},${minStack.top()},${minStack.getMin()}]")
         println("Time complexity O(1)")
-        println("Space complexity O(n)")
+        println("Space complexity O(1)")
     }
 
     class MinStack {
@@ -638,4 +742,51 @@ class ExampleUnitTest {
         }
     }
 
+    @Test //43
+    fun houseRobber() {
+        println("(easy)house robber")
+        val houses = intArrayOf(2, 7, 9, 3, 1)
+        println("result:${rob(houses)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(1)")
+    }
+
+    private fun rob(nums: IntArray): Int {
+        if (nums.isEmpty()) return 0
+        var curr = nums[0]
+        var prev = 0
+
+        for (i in 1 until nums.size) {
+            val rob = prev + nums[i]
+            prev = curr
+            curr = maxOf(curr, rob)
+        }
+        return curr
+    }
+
+    @Test //46
+    fun coinChange() {
+        println("(easy)coin change")
+        val coins = intArrayOf(1, 2, 5)
+        val amount = 11
+        println("result:${coinChange(coins, amount)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(1)")
+    }
+
+    private fun coinChange(coins: IntArray, amount: Int): Int {
+        if (amount == 0) return 0
+        val dp = IntArray(amount + 1) { amount + 1 }
+        dp[0] = 0
+
+        for (i in 1..amount) {
+            for (coin in coins) {
+                if (i - coin >= 0) {
+                    dp[i] = minOf(dp[i], 1 + dp[i - coin])
+                }
+            }
+        }
+        if (dp[amount] > amount) return -1
+        return dp[amount]
+    }
 }
