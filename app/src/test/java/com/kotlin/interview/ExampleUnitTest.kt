@@ -789,4 +789,422 @@ class ExampleUnitTest {
 
         return if (dp[amount] == amount + 1) -1 else dp[amount]
     }
+
+    @Test //google
+    fun averageSplitsOutput() {
+        println("(easy)average splits output")
+        val test = mutableListOf<Pair<Int, Int>>()
+        test.add(Pair(40, 10))
+        test.add(Pair(16, 20))
+        test.add(Pair(15, 10))
+        test.add(Pair(10, 10))
+        test.add(Pair(50, 10))
+        test.add(Pair(300, 104123))
+        test.add(Pair(22401, 1043))
+        test.add(Pair(132049, 10412))
+        for(t in test){
+            val dataSize = t.first
+            val max = t.second
+            val splits = findSplits(dataSize, t.second, mutableListOf()).toIntArray()
+            val splitCount = splits.size
+            if( dataSize % max != 0) {
+                val averageDataSize = dataSize / splitCount
+                val averageSplits = findSplits(dataSize, averageDataSize, mutableListOf()).toIntArray()
+                println("result average splits:${averageDataSize}:[${averageSplits.joinToString { it.toString() }}]")
+            } else {
+                println("result splits:${splitCount}:[${splits.joinToString { it.toString() }}]")
+            }
+        }
+        println("Time complexity O(1)")
+        println("Space complexity O(1)")
+    }
+
+    fun findSplits(dataSize: Int, max: Int, currentSplits: MutableList<Int>): List<Int> {
+        return if (dataSize <= 0) {
+            if (currentSplits.isEmpty()) return listOf(0) else currentSplits
+        } else if (dataSize <= max) {
+            currentSplits.add(max)
+            currentSplits
+        } else {
+            // dataSize > maxPacketSize
+            currentSplits.add(max)
+            findSplits(dataSize - max, max, currentSplits)
+        }
+    }
+
+    @Test
+    fun reorderLogFiles() {
+        println("(easy)reorder log files")
+        val logs = arrayOf("dig1 8 1 5 1", "let1 art can", "dig2 3 6", "let2 own kit dig", "let3 art zero")
+        println("result:${reOrderLogFiles(logs).joinToString()}")
+        println("Time complexity O(nlogn)")
+        println("Space complexity O(n)")
+    }
+
+    private fun reOrderLogFiles(logs: Array<String>): Array<String> {
+        val letterLogs = mutableListOf<String>()
+        val digitLogs = mutableListOf<String>()
+        logs.forEach {
+            var isDigit = true
+            val arr = it.split(" ")
+            for (i in 1..<arr.size) {
+                if (arr[i].toIntOrNull() == null) {
+                    isDigit = false
+                    break
+                }
+            }
+            (if (isDigit) digitLogs else letterLogs).add(it)
+        }
+        digitLogs.onEach {
+            letterLogs.add(it)
+        }
+        return letterLogs.map { it }.toTypedArray()
+    }
+
+    fun generateParenthesis() {
+        println("(mind)generate parenthesis")
+        val n = 3
+        println("result:${generateParenthesis(n)}")
+        println("Time complexity O(n)")
+        println("Space complexity O(n)")
+    }
+
+    fun generateParenthesis(n: Int): List<String> {
+        if (n == 1) return listOf("()")
+        val parenthesis = mapOf(1 to "()")
+        for (i in 2..n) {
+
+        }
+        return listOf()
+    }
+
+    @Test
+    fun binarySearch() {
+        println("(easy)binary search")
+        val nums = intArrayOf(-1, 0, 3, 5, 9, 12)
+        val target = 9
+        println("result:${search(nums, target)}")
+        println("Time complexity O(logn)")
+        println("Space complexity O(1)")
+    }
+
+    private fun search(nums: IntArray, target: Int): Int {
+        var start = 0
+        var end = nums.size - 1
+        while (start <= end) {
+            val mid = start + (end - start) / 2
+            when {
+                nums[mid] == target -> return mid
+                nums[mid] < target -> start = mid + 1
+                else -> end = mid - 1
+            }
+        }
+        return -1
+    }
+
+    @Test
+    fun medianOfTwoSortedArrays() {
+        println("(easy)median of two sorted arrays")
+        val nums1 = intArrayOf(1, 3)
+        val nums2 = intArrayOf(2)
+        println("result:${findMedianSortedArrays(nums1, nums2)}")
+        println("Time complexity O(m+n)")
+        println("Space complexity O(1)")
+    }
+
+    private fun findMedianSortedArrays(nums1: IntArray, nums2: IntArray): Double {
+        if (nums1.size > nums2.size) {
+            return findMedianSortedArrays(nums2, nums1)
+        }
+
+        val m = nums1.size
+        val n = nums2.size
+        var start = 0
+        var end = m
+
+        while (start <= end) {
+            val partitionX = (start + end) / 2
+            val partitionY = (m + n + 1) / 2 - partitionX
+
+            // Handle edge cases for maxLeftX, minRightX, maxLeftY, minRightY
+            val maxLeftX = if (partitionX == 0) Int.MIN_VALUE else nums1[partitionX - 1]
+            val minRightX = if (partitionX == m) Int.MAX_VALUE else nums1[partitionX]
+            val maxLeftY = if (partitionY == 0) Int.MIN_VALUE else nums2[partitionY - 1]
+            val minRightY = if (partitionY == n) Int.MAX_VALUE else nums2[partitionY]
+            // Check if the partitions are correct
+            if (maxLeftX <= minRightY && maxLeftY <= minRightX) {
+                if ((m + n) % 2 == 0) {
+                    return (maxOf(maxLeftX, maxLeftY) + minOf(minRightX, minRightY)).toDouble() / 2
+                } else {
+                    return maxOf(maxLeftX, maxLeftY).toDouble()
+                }
+            } else if (maxLeftX > minRightY) {
+                // Move partitionX to the left
+                end = partitionX - 1
+            } else {
+                // Move partitionX to the right
+                start = partitionX + 1
+            }
+        }
+        return 0.0
+    }
+
+    //Codility Demo Test
+
+    /*
+     * given an array A of N integers, returns the smallest positive integer (greater than 0) that does not occur in A.
+     * For example, given A = [1, 3, 6`, 4, 1, 2], the function should return 5.
+     * Given A = [1, 2, 3], the function should return 4.
+     * Given A = [−1, −3], the functio`n should return 1.
+     * N is an integer within the range [1..100,000];
+    * */
+    fun solution1(intArrayOf: IntArray): Int {
+        val seen = HashSet<Int>() // Use a HashSet for efficient presence checking
+
+        // Add only positive numbers to the set, ignoring duplicates
+        for (num in intArrayOf) {
+            if (num > 0) {
+                seen.add(num)
+            }
+        }
+
+        // Iterate through positive integers starting from 1
+        var i = 1
+        while (true) {
+            if (!seen.contains(i)) {
+                return i // Found the smallest missing positive integer
+            }
+            i++
+        }
+        return 1 // If all positive integers from 1 to N are present
+    }
+
+    @Test
+    fun mountainArray(){
+        println(mountainArrayLength(intArrayOf(1, 2)))        // Output: 2
+        println(mountainArrayLength(intArrayOf(2, 5, 3, 2, 4, 1))) // Output: 4
+        println(mountainArrayLength(intArrayOf(2, 3, 3, 2, 2, 2, 1)))// Output: 7
+        println(mountainArrayLength(intArrayOf(2, 3, 4, 5, 6, 7, 6, 5, 1, 3, 2, 1)))// Output: 12
+    }
+
+     private fun mountainArrayLength(a: IntArray) : Int {
+         if (a.size < 2) return a.size // no mountian in this case
+
+         var maxLength = 0
+         var i = 0
+         while (i < a.size - 1) {
+             var currentLength = 0
+             var peakIndex = i
+
+             // Check for start of mountian
+             var isIncrease = false
+             var j = i
+             while (j < a.size - 1 && a[j] <= a[j + 1]) {
+                 isIncrease = true
+                 peakIndex++
+                 j++
+             }
+             if (peakIndex == i) {
+                 i++
+                 continue
+             }
+
+             // Check for peak
+             var isDecrease = false
+             while (j < a.size - 1 && a[j] >= a[j + 1]) {
+                 isDecrease = true
+                 j++
+             }
+             if (!isIncrease && !isDecrease) {
+                 i++
+                 continue
+             } else if (!isIncrease) {
+                 i = j
+             } else if (!isDecrease) {
+                 maxLength = maxOf(maxLength, j + 1 - i)
+                 i = j
+             } else {
+                 currentLength = j + 1 - i
+                 maxLength = maxOf(maxLength, currentLength)
+                 i = j
+             }
+         }
+
+         return maxLength
+     }
+
+    fun solution(N: Int, A: IntArray, B: IntArray): Boolean {
+        // Handle cases with no edges
+        if (A.isEmpty()) {
+            return N <= 1
+        }
+
+        val M = A.size
+        // Check for self-loops and edge count
+        if (M != N - 1) return false
+        for (i in A.indices) {
+            if (A[i] == B[i]) {
+                return false
+            }
+            if (A[i]<1 || A[i] > N || B[i]<1 || B[i]>N){
+                return false
+            }
+        }
+        // Create an adjacency list representation of the graph
+        val adj = Array(N + 1) { mutableListOf<Int>() }
+        for (i in A.indices) {
+            adj[A[i]].add(B[i])
+            adj[B[i]].add(A[i])
+        }
+
+        // Check if the graph is connected
+        val visited = BooleanArray(N + 1)
+        fun dfs(u: Int) {
+            visited[u] = true
+            for (v in adj[u]) {
+                if (!visited[v]) {
+                    dfs(v)
+                }
+            }
+        }
+
+        // Start DFS from vertex 1
+        dfs(1)
+
+        // Check if all reachable vertices are visited
+        for (i in 1..N) {
+            if (!visited[i] && adj[i].isNotEmpty()) {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    @Test
+    fun grash() {
+        // Test cases
+        println(solution(4, intArrayOf(1, 2, 4, 4, 3), intArrayOf(2, 3, 1, 3, 1))) // true
+        println(solution(4, intArrayOf(1, 2, 1, 3), intArrayOf(2, 4, 3, 4))) // false
+        println(solution(6, intArrayOf(2, 4, 5, 3), intArrayOf(3, 5, 6, 4))) // false
+        println(solution(3, intArrayOf(1, 3), intArrayOf(2, 2))) // false
+        println(solution(1, intArrayOf(), intArrayOf())) // true
+        println(solution(1, intArrayOf(1), intArrayOf(1))) // false
+        println(solution(1, intArrayOf(), intArrayOf(1))) // true
+        println(solution(3, intArrayOf(1, 2, 3), intArrayOf(2, 3, 1))) // true
+        println(solution(3, intArrayOf(1, 2, 3, 2), intArrayOf(2, 3, 1, 1))) // false
+    }
+
+    fun solution(T: IntArray, A: IntArray): Int {
+        val n = T.size
+        val m = A.size
+
+        // Build the graph (adjacency list)
+        val adj = Array(n) { mutableListOf<Int>() }
+        for (i in 0 until n) {
+            if (i != T[i])
+                adj[T[i]].add(i)
+        }
+
+        // Function to get all prerequisites for a skill
+        fun getPrerequisites(skill: Int, learned: MutableSet<Int>) {
+            if(skill != 0){
+                val parent = T[skill]
+                if (!learned.contains(parent)) {
+                    learned.add(parent)
+                    getPrerequisites(parent, learned)
+                }
+
+            }
+
+
+        }
+
+        val learnedSkills = mutableSetOf<Int>()
+        for (skill in A) {
+            if (!learnedSkills.contains(skill)) {
+                learnedSkills.add(skill)
+                getPrerequisites(skill, learnedSkills)
+            }
+
+        }
+
+
+        return learnedSkills.size
+    }
+
+    @Test
+    fun main1() {
+        // Test cases
+        println(solution(intArrayOf(0, 0, 1, 1), intArrayOf(2))) // Output: 3
+        println(solution(intArrayOf(0, 0, 0, 0, 2, 3, 3), intArrayOf(2, 5, 6))) // Output: 5
+        println(solution(intArrayOf(0, 0, 1, 2), intArrayOf(1, 2))) // Output: 3
+        println(solution(intArrayOf(0,0,0,0,1,2,3,4), intArrayOf(5,6,7))) // Output: 7
+        println(solution(intArrayOf(0,0,0,0,1,2,3,4), intArrayOf(0))) // Output: 1
+    }
+
+    fun solution(N: Int): Int {
+        if (N == 0) return 0
+        if (N == 1) return 1
+
+        val sequence = mutableListOf(0, 1)
+        val seen = mutableMapOf<Pair<Int, Int>, Int>() // Map to store pairs of previous numbers and their index
+
+        var n = 2
+        while (n <= N) {
+            val prev1 = sequence[n - 1]
+            val prev2 = sequence[n - 2]
+            var sum = 0
+            var temp = prev1
+            while (temp > 0) {
+                sum += temp % 10
+                temp /= 10
+            }
+            temp = prev2
+            while (temp > 0) {
+                sum += temp % 10
+                temp /= 10
+            }
+
+            sequence.add(sum)
+
+            // Check for cycle
+            val pair = Pair(prev1, prev2)
+            if (seen.containsKey(pair)) {
+                val cycleStart = seen[pair]!!
+                val cycleLength = n - cycleStart
+                val remaining = N - cycleStart
+                val indexInCycle = remaining % cycleLength
+                return sequence[cycleStart + indexInCycle]
+            } else {
+                seen[pair] = n
+            }
+
+            n++
+        }
+
+        return sequence[N]
+    }
+
+    @Test
+    fun main() {
+        println(solution(0)) // 0
+        println(solution(1)) // 1
+        println(solution(2)) // 1
+        println(solution(6)) // 8
+        println(solution(10)) // 10
+        println(solution(11)) // 8
+        println(solution(12)) // 9
+        println(solution(13)) // 7
+        println(solution(14))//10
+        println(solution(15))//8
+        println(solution(16))//9
+        println(solution(17))//7
+        println(solution(18))//10
+        println(solution(19))//8
+        println(solution(100))
+        println(solution(10000))
+    }
+
+
 }
