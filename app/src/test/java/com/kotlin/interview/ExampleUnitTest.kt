@@ -2,6 +2,7 @@ package com.kotlin.interview
 
 import org.junit.Test
 import java.util.LinkedList
+import java.util.Queue
 import java.util.Stack
 
 import kotlin.math.max
@@ -1081,19 +1082,19 @@ class ExampleUnitTest {
         return true
     }
 
-    @Test
-    fun grash() {
-        // Test cases
-        println(solution(4, intArrayOf(1, 2, 4, 4, 3), intArrayOf(2, 3, 1, 3, 1))) // true
-        println(solution(4, intArrayOf(1, 2, 1, 3), intArrayOf(2, 4, 3, 4))) // false
-        println(solution(6, intArrayOf(2, 4, 5, 3), intArrayOf(3, 5, 6, 4))) // false
-        println(solution(3, intArrayOf(1, 3), intArrayOf(2, 2))) // false
-        println(solution(1, intArrayOf(), intArrayOf())) // true
-        println(solution(1, intArrayOf(1), intArrayOf(1))) // false
-        println(solution(1, intArrayOf(), intArrayOf(1))) // true
-        println(solution(3, intArrayOf(1, 2, 3), intArrayOf(2, 3, 1))) // true
-        println(solution(3, intArrayOf(1, 2, 3, 2), intArrayOf(2, 3, 1, 1))) // false
-    }
+//    @Test
+//    fun grash() {
+//        // Test cases
+//        println(solution(4, intArrayOf(1, 2, 4, 4, 3), intArrayOf(2, 3, 1, 3, 1))) // true
+//        println(solution(4, intArrayOf(1, 2, 1, 3), intArrayOf(2, 4, 3, 4))) // false
+//        println(solution(6, intArrayOf(2, 4, 5, 3), intArrayOf(3, 5, 6, 4))) // false
+//        println(solution(3, intArrayOf(1, 3), intArrayOf(2, 2))) // false
+//        println(solution(1, intArrayOf(), intArrayOf())) // true
+//        println(solution(1, intArrayOf(1), intArrayOf(1))) // false
+//        println(solution(1, intArrayOf(), intArrayOf(1))) // true
+//        println(solution(3, intArrayOf(1, 2, 3), intArrayOf(2, 3, 1))) // true
+//        println(solution(3, intArrayOf(1, 2, 3, 2), intArrayOf(2, 3, 1, 1))) // false
+//    }
 
     fun solution(T: IntArray, A: IntArray): Int {
         val n = T.size
@@ -1133,15 +1134,15 @@ class ExampleUnitTest {
         return learnedSkills.size
     }
 
-    @Test
-    fun main1() {
-        // Test cases
-        println(solution(intArrayOf(0, 0, 1, 1), intArrayOf(2))) // Output: 3
-        println(solution(intArrayOf(0, 0, 0, 0, 2, 3, 3), intArrayOf(2, 5, 6))) // Output: 5
-        println(solution(intArrayOf(0, 0, 1, 2), intArrayOf(1, 2))) // Output: 3
-        println(solution(intArrayOf(0,0,0,0,1,2,3,4), intArrayOf(5,6,7))) // Output: 7
-        println(solution(intArrayOf(0,0,0,0,1,2,3,4), intArrayOf(0))) // Output: 1
-    }
+//    @Test
+//    fun main1() {
+//        // Test cases
+//        println(solution(intArrayOf(0, 0, 1, 1), intArrayOf(2))) // Output: 3
+//        println(solution(intArrayOf(0, 0, 0, 0, 2, 3, 3), intArrayOf(2, 5, 6))) // Output: 5
+//        println(solution(intArrayOf(0, 0, 1, 2), intArrayOf(1, 2))) // Output: 3
+//        println(solution(intArrayOf(0,0,0,0,1,2,3,4), intArrayOf(5,6,7))) // Output: 7
+//        println(solution(intArrayOf(0,0,0,0,1,2,3,4), intArrayOf(0))) // Output: 1
+//    }
 
     fun solution(N: Int): Int {
         if (N == 0) return 0
@@ -1185,26 +1186,68 @@ class ExampleUnitTest {
 
         return sequence[N]
     }
+//
+//    @Test
+//    fun main() {
+//        println(solution(0)) // 0
+//        println(solution(1)) // 1
+//        println(solution(2)) // 1
+//        println(solution(6)) // 8
+//        println(solution(10)) // 10
+//        println(solution(11)) // 8
+//        println(solution(12)) // 9
+//        println(solution(13)) // 7
+//        println(solution(14))//10
+//        println(solution(15))//8
+//        println(solution(16))//9
+//        println(solution(17))//7
+//        println(solution(18))//10
+//        println(solution(19))//8
+//        println(solution(100))
+//        println(solution(10000))
+//    }
 
     @Test
-    fun main() {
-        println(solution(0)) // 0
-        println(solution(1)) // 1
-        println(solution(2)) // 1
-        println(solution(6)) // 8
-        println(solution(10)) // 10
-        println(solution(11)) // 8
-        println(solution(12)) // 9
-        println(solution(13)) // 7
-        println(solution(14))//10
-        println(solution(15))//8
-        println(solution(16))//9
-        println(solution(17))//7
-        println(solution(18))//10
-        println(solution(19))//8
-        println(solution(100))
-        println(solution(10000))
+    fun wordLadder(){
+        println(ladderLength("hit", "cog", listOf("hot", "dot", "dog", "lot", "log", "cog"))) // Output: 5
+        println(ladderLength("hot", "dog", listOf("hot", "dot", "dog"))) // Output: 3
     }
 
+    private fun ladderLength(beginWord: String, endWord: String, wordList: List<String>): Int {
+        val wordSet = wordList.toSet()
+        if (!wordSet.contains(endWord)) {
+            return 0
+        }
+        println("beginWord:$beginWord, endWord:$endWord, wordList:$wordList")
 
+        val queue: Queue<Pair<String, Int>> = LinkedList()
+        queue.offer(Pair(beginWord, 1)) // Initialize the queue with the starting word and its length
+
+        val visited: MutableSet<String> = mutableSetOf()
+        visited.add(beginWord) // Mark the starting word as visited
+
+        while (queue.isNotEmpty()){
+            val (currentWord, level) = queue.poll()!!
+            if(currentWord == endWord){
+                return level // Found the shortest path
+            }
+            // Generate neighbors by changing one character at a time
+            for (i in currentWord.indices) {
+                val char = currentWord[i]
+                val charArray = currentWord.toCharArray()
+                // Try replacing with every letter 'a' through 'z'
+                for(charAscii in 'a'..'z'){
+                    if (charAscii == char) continue // No change, skip
+
+                    charArray[i] = charAscii
+                    val neighborWord = String(charArray)
+                    if (wordSet.contains(neighborWord) && !visited.contains(neighborWord)) {
+                        visited.add(neighborWord)
+                        queue.offer(Pair(neighborWord, level + 1))
+                    }
+                }
+            }
+        }
+       return 0
+    }
 }
