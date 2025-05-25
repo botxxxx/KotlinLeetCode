@@ -1,5 +1,6 @@
 package com.kotlin.interview
 
+import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import java.util.LinkedList
 import java.util.Queue
@@ -1282,21 +1283,149 @@ class ExampleUnitTest {
         println("space complexity O(m*n)")
     }
 
+    // -- Unit Tests --
+    @Test
+    fun rottingOranges_example1_allRot() {
+        val grid = arrayOf(
+            intArrayOf(2, 1, 1),
+            intArrayOf(1, 1, 0),
+            intArrayOf(0, 1, 1)
+        )
+        val expected = 4
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 1 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example2_impossibleToRot() {
+        val grid = arrayOf(
+            intArrayOf(2, 1, 1),
+            intArrayOf(0, 1, 1),
+            intArrayOf(1, 0, 1)
+        )
+        val expected = -1
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 2 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example3_singleRottenNoFresh() {
+        val grid = arrayOf(intArrayOf(0, 2))
+        val expected = 0
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 3 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example4_noFreshOrangesInitially() {
+        val grid = arrayOf(
+            intArrayOf(2, 2, 2),
+            intArrayOf(2, 0, 2)
+        )
+        val expected = 0
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 4 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example5_emptyGrid() {
+        val grid = arrayOf<IntArray>()
+        val expected = 0
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 5 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example6_gridWithEmptyRows() {
+        val grid = arrayOf(
+            intArrayOf(),
+            intArrayOf()
+        )
+        val expected = 0
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 6 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example7_oneFreshOrangeNoRotten() {
+        val grid = arrayOf(
+            intArrayOf(1)
+        )
+        val expected = -1
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 7 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example8_oneRottenOrangeNoFresh() {
+        val grid = arrayOf(
+            intArrayOf(2)
+        )
+        val expected = 0
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 8 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example9_oneRottenOrangeOneFresh() {
+        val grid = arrayOf(
+            intArrayOf(2, 1)
+        )
+        val expected = 1
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 9 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example10_allFresh() {
+        val grid = arrayOf(
+            intArrayOf(1, 1),
+            intArrayOf(1, 1)
+        )
+        val expected = -1
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 10 failed", expected, actual)
+    }
+
+    @Test
+    fun rottingOranges_example11_linearRotting() {
+        val grid = arrayOf(
+            intArrayOf(2, 1, 1, 1, 1)
+        )
+        val expected = 4
+        val actual = rottingOranges(grid)
+        assertEquals("Test case 11 failed", expected, actual)
+    }
+
+    @Test
+    fun run_all_tests() {
+        rottingOranges_example1_allRot()
+        rottingOranges_example2_impossibleToRot()
+        rottingOranges_example3_singleRottenNoFresh()
+        rottingOranges_example4_noFreshOrangesInitially()
+        rottingOranges_example5_emptyGrid()
+        rottingOranges_example6_gridWithEmptyRows()
+        rottingOranges_example7_oneFreshOrangeNoRotten()
+        rottingOranges_example8_oneRottenOrangeNoFresh()
+        rottingOranges_example9_oneRottenOrangeOneFresh()
+        rottingOranges_example10_allFresh()
+        rottingOranges_example11_linearRotting()
+    }
+
     private fun rottingOranges(grid: Array<IntArray>): Int {
+        if (grid.isEmpty() || grid[0].isEmpty()) return 0
         val rows = grid.size
         val cols = grid.first().size
-
         println("graph in ${cols}x${rows}")
         for (row in grid) {
             println(row.joinToString { it.toString() })
         }
-
+        // if rows or cols is 0, return 0
         if (rows == 0 || cols == 0) return 0
-
-        val queue: Queue<Pair<Int, Int>> = LinkedList() // (row, col)
+        // (row, col)
+        val queue: Queue<Pair<Int, Int>> = LinkedList()
         var freshOranges = 0
-
-        // Initialize the queue with rotten oranges
+        // 1.Initialize the queue with rotten oranges
         for (r in 0..<rows) {
             for (c in 0..<cols) {
                 when (grid[r][c]) {
@@ -1305,17 +1434,18 @@ class ExampleUnitTest {
                 }
             }
         }
+        // if there are no fresh oranges
         if (freshOranges == 0) return 0
 
         var minutes = 0
         // Directions: up, down, left, right
         val directions = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
-
-        // BFS
+        // 2.BFS
+        // when the queue is not empty and there are fresh oranges left
         while (queue.isNotEmpty() && freshOranges > 0) {
             val size = queue.size
-            for (q in 0..< size) {
-                val (row, col) = queue.poll()!!
+            for (level in 0..<size) {
+                val (row, col) = queue.poll() ?: continue
                 // Keep track of the maximum time reached (as BFS processes level by level)
                 for (dir in directions) {
                     val newRow = row + dir[0]
