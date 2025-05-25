@@ -803,12 +803,12 @@ class ExampleUnitTest {
         test.add(Pair(300, 104123))
         test.add(Pair(22401, 1043))
         test.add(Pair(132049, 10412))
-        for(t in test){
+        for (t in test) {
             val dataSize = t.first
             val max = t.second
             val splits = findSplits(dataSize, t.second, mutableListOf()).toIntArray()
             val splitCount = splits.size
-            if( dataSize % max != 0) {
+            if (dataSize % max != 0) {
                 val averageDataSize = dataSize / splitCount
                 val averageSplits = findSplits(dataSize, averageDataSize, mutableListOf()).toIntArray()
                 println("result average splits:${averageDataSize}:[${averageSplits.joinToString { it.toString() }}]")
@@ -981,58 +981,58 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun mountainArray(){
+    fun mountainArray() {
         println(mountainArrayLength(intArrayOf(1, 2)))        // Output: 2
         println(mountainArrayLength(intArrayOf(2, 5, 3, 2, 4, 1))) // Output: 4
         println(mountainArrayLength(intArrayOf(2, 3, 3, 2, 2, 2, 1)))// Output: 7
         println(mountainArrayLength(intArrayOf(2, 3, 4, 5, 6, 7, 6, 5, 1, 3, 2, 1)))// Output: 12
     }
 
-     private fun mountainArrayLength(a: IntArray) : Int {
-         if (a.size < 2) return a.size // no mountian in this case
+    private fun mountainArrayLength(a: IntArray): Int {
+        if (a.size < 2) return a.size // no mountian in this case
 
-         var maxLength = 0
-         var i = 0
-         while (i < a.size - 1) {
-             var currentLength = 0
-             var peakIndex = i
+        var maxLength = 0
+        var i = 0
+        while (i < a.size - 1) {
+            var currentLength = 0
+            var peakIndex = i
 
-             // Check for start of mountian
-             var isIncrease = false
-             var j = i
-             while (j < a.size - 1 && a[j] <= a[j + 1]) {
-                 isIncrease = true
-                 peakIndex++
-                 j++
-             }
-             if (peakIndex == i) {
-                 i++
-                 continue
-             }
+            // Check for start of mountian
+            var isIncrease = false
+            var j = i
+            while (j < a.size - 1 && a[j] <= a[j + 1]) {
+                isIncrease = true
+                peakIndex++
+                j++
+            }
+            if (peakIndex == i) {
+                i++
+                continue
+            }
 
-             // Check for peak
-             var isDecrease = false
-             while (j < a.size - 1 && a[j] >= a[j + 1]) {
-                 isDecrease = true
-                 j++
-             }
-             if (!isIncrease && !isDecrease) {
-                 i++
-                 continue
-             } else if (!isIncrease) {
-                 i = j
-             } else if (!isDecrease) {
-                 maxLength = maxOf(maxLength, j + 1 - i)
-                 i = j
-             } else {
-                 currentLength = j + 1 - i
-                 maxLength = maxOf(maxLength, currentLength)
-                 i = j
-             }
-         }
+            // Check for peak
+            var isDecrease = false
+            while (j < a.size - 1 && a[j] >= a[j + 1]) {
+                isDecrease = true
+                j++
+            }
+            if (!isIncrease && !isDecrease) {
+                i++
+                continue
+            } else if (!isIncrease) {
+                i = j
+            } else if (!isDecrease) {
+                maxLength = maxOf(maxLength, j + 1 - i)
+                i = j
+            } else {
+                currentLength = j + 1 - i
+                maxLength = maxOf(maxLength, currentLength)
+                i = j
+            }
+        }
 
-         return maxLength
-     }
+        return maxLength
+    }
 
     fun solution(N: Int, A: IntArray, B: IntArray): Boolean {
         // Handle cases with no edges
@@ -1047,7 +1047,7 @@ class ExampleUnitTest {
             if (A[i] == B[i]) {
                 return false
             }
-            if (A[i]<1 || A[i] > N || B[i]<1 || B[i]>N){
+            if (A[i] < 1 || A[i] > N || B[i] < 1 || B[i] > N) {
                 return false
             }
         }
@@ -1109,7 +1109,7 @@ class ExampleUnitTest {
 
         // Function to get all prerequisites for a skill
         fun getPrerequisites(skill: Int, learned: MutableSet<Int>) {
-            if(skill != 0){
+            if (skill != 0) {
                 val parent = T[skill]
                 if (!learned.contains(parent)) {
                     learned.add(parent)
@@ -1208,7 +1208,7 @@ class ExampleUnitTest {
 //    }
 
     @Test
-    fun wordLadder(){
+    fun wordLadder() {
         println(ladderLength("hit", "cog", listOf("hot", "dot", "dog", "lot", "log", "cog"))) // Output: 5
         println(ladderLength("hot", "dog", listOf("hot", "dot", "dog"))) // Output: 3
     }
@@ -1226,9 +1226,9 @@ class ExampleUnitTest {
         val visited: MutableSet<String> = mutableSetOf()
         visited.add(beginWord) // Mark the starting word as visited
 
-        while (queue.isNotEmpty()){
+        while (queue.isNotEmpty()) {
             val (currentWord, level) = queue.poll()!!
-            if(currentWord == endWord){
+            if (currentWord == endWord) {
                 return level // Found the shortest path
             }
             // Generate neighbors by changing one character at a time
@@ -1236,7 +1236,7 @@ class ExampleUnitTest {
                 val char = currentWord[i]
                 val charArray = currentWord.toCharArray()
                 // Try replacing with every letter 'a' through 'z'
-                for(charAscii in 'a'..'z'){
+                for (charAscii in 'a'..'z') {
                     if (charAscii == char) continue // No change, skip
 
                     charArray[i] = charAscii
@@ -1248,6 +1248,96 @@ class ExampleUnitTest {
                 }
             }
         }
-       return 0
+        return 0
+    }
+
+    @Test //994. Rotting Oranges
+    fun rottingOrangeTest() {
+        println(
+            rottingOranges(
+                arrayOf(
+                    intArrayOf(2, 1, 1),
+                    intArrayOf(1, 1, 0),
+                    intArrayOf(0, 1, 1)
+                )
+            )
+        ) // Output: 4
+        println(
+            rottingOranges(
+                arrayOf(
+                    intArrayOf(2, 1, 1),
+                    intArrayOf(0, 1, 1),
+                    intArrayOf(1, 0, 1)
+                )
+            )
+        ) // Output: -1
+        println(
+            rottingOranges(
+                arrayOf(
+                    intArrayOf(0, 2)
+                )
+            )
+        )
+        println("time complexity O(m*n)")
+        println("space complexity O(m*n)")
+    }
+
+    private fun rottingOranges(grid: Array<IntArray>): Int {
+        val rows = grid.size
+        val cols = grid.first().size
+
+        println("graph in ${cols}x${rows}")
+        for (row in grid) {
+            println(row.joinToString { it.toString() })
+        }
+
+        if (rows == 0 || cols == 0) return 0
+
+        val queue: Queue<Pair<Int, Int>> = LinkedList() // (row, col)
+        var freshOranges = 0
+
+        // Initialize the queue with rotten oranges
+        for (r in 0..<rows) {
+            for (c in 0..<cols) {
+                when (grid[r][c]) {
+                    2 -> queue.offer(Pair(r, c))
+                    1 -> freshOranges++
+                }
+            }
+        }
+        if (freshOranges == 0) return 0
+
+        var minutes = 0
+        // Directions: up, down, left, right
+        val directions = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
+
+        // BFS
+        while (queue.isNotEmpty() && freshOranges > 0) {
+            val size = queue.size
+            for (q in 0..< size) {
+                val (row, col) = queue.poll()!!
+                // Keep track of the maximum time reached (as BFS processes level by level)
+                for (dir in directions) {
+                    val newRow = row + dir[0]
+                    val newCol = col + dir[1]
+                    // Check boundaries and if the neighbor is a fresh orange
+                    val inRow = newRow in 0..<rows
+                    val inCol = newCol in 0..<cols
+                    if (inRow && inCol) {
+                        val isFresh = grid[newRow][newCol] == 1
+                        if (isFresh) {
+                            grid[newRow][newCol] = 2
+                            freshOranges--
+                            queue.offer(Pair(newRow, newCol))
+                        }
+                    }
+                }
+            }
+            minutes++
+        }
+        // 3. After BFS, check if all fresh oranges have rotted
+        val ans = if (freshOranges == 0) minutes else -1
+        println("freshOranges:$freshOranges, minutes:$minutes, ans:$ans")
+        return ans
     }
 }
