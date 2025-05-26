@@ -1470,4 +1470,95 @@ class ExampleUnitTest {
         println("freshOranges:$freshOranges, minutes:$minutes, ans:$ans")
         return ans
     }
+
+    @Test //200. Number of lands
+    fun numberOfLands() {
+        println(
+            numIslands(
+                arrayOf(
+                    charArrayOf('1', '1', '0', '1', '0'),
+                    charArrayOf('0', '0', '0', '1', '0'),
+                    charArrayOf('1', '1', '0', '0', '1')
+                )
+            )
+        )
+        println("time complexity O(m*n)")
+        println("space complexity O(m*n)")
+    }
+
+    private fun numIslands(grid: Array<CharArray>): Int {
+        if (grid.isEmpty() || grid[0].isEmpty()) return 0
+        val rows = grid.size
+        val cols = grid.first().size
+        println("graph in ${cols}x${rows}")
+        for (row in grid) {
+            println(row.joinToString { it.toString() })
+        }
+        if (rows == 0 || cols == 0) return 0
+        val visited: MutableSet<Pair<Int, Int>> = mutableSetOf()
+        var lands = 0
+        for (r in 0..<rows) {
+            for (c in 0..<cols) {
+                if (grid[r][c] == '1' && !visited.contains(Pair(r, c))) {
+                    lands++ // Found a new island
+                    dfsExplore(grid, r, c, visited)
+                }
+            }
+        }
+        return lands
+    }
+
+    private fun bfsExplore(grid: Array<CharArray>, r: Int, c: Int, visited: MutableSet<Pair<Int, Int>>) {
+        val rows = grid.size
+        val cols = grid.first().size
+        val queue: Queue<Pair<Int, Int>> = LinkedList()
+        queue.offer(Pair(r, c))
+        // Directions: up, down, left, right
+        val directions = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
+        // BFS
+        while (queue.isNotEmpty()) {
+            val (row, col) = queue.poll() ?: continue
+            for (dir in directions) {
+                val newRow = row + dir[0]
+                val newCol = col + dir[1]
+                // Check boundaries and if the neighbor is a land
+                val inRow = newRow in 0..<rows
+                val inCol = newCol in 0..<cols
+                if (inRow && inCol) {
+                    if (!visited.contains(Pair(newRow, newCol))) {
+                        visited.add(Pair(newRow, newCol))
+                        val isLand = grid[newRow][newCol] == '1'
+                        if (isLand) {
+                            queue.offer(Pair(newRow, newCol))
+                        }
+                    }
+                }
+            }
+        }
+        println("bfsExplore:(r:$r, c:$c)")
+    }
+
+    private fun dfsExplore(grid: Array<CharArray>, r: Int, c: Int, visited: MutableSet<Pair<Int, Int>>) {
+        val rows = grid.size
+        val cols = grid.first().size
+        val inRow = r in 0..<rows
+        val inCol = c in 0..<cols
+        if (!inRow || !inCol) {
+            return
+        }
+        if (visited.contains(Pair(r, c))) {
+            return
+        }
+        if (grid[r][c] == '0') {
+            return
+        }
+        visited.add(Pair(r, c))
+        // Directions: up, down, left, right
+        val directions = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
+        for (dir in directions) {
+            val newRow = r + dir[0]
+            val newCol = c + dir[1]
+            dfsExplore(grid, newRow, newCol, visited)
+        }
+    }
 }
