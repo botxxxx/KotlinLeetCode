@@ -348,16 +348,16 @@ class ExampleUnitTest {
     }
 
     private fun twoSum(nums: IntArray, target: Int): IntArray {
-        if (nums.size == 2) {
-            return intArrayOf(0, 1)
-        } else {
-            val hashMap = HashMap<Int, Int>(nums.size)
-            nums.forEachIndexed { index, i ->
-                if (hashMap.containsKey(target - i)) {
-                    return intArrayOf(hashMap[target - i]!!, index)
-                } else {
-                    hashMap[i] = index
-                }
+        if (nums.size == 2) return intArrayOf(0, 1)
+        val hashMap = HashMap<Int, Int>(nums.size)
+        hashMap[nums[0]] = 0
+        var i = 1
+        while (i < nums.size) {
+            if (hashMap.containsKey(target - nums[i])) {
+                return intArrayOf(hashMap[target - nums[i]]!!, i)
+            } else {
+                hashMap[nums[i]] = i
+                i++
             }
         }
         return intArrayOf()
