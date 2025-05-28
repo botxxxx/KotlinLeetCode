@@ -304,6 +304,7 @@ class ExampleUnitTest {
 
     @Test //13
     fun addBinary() {
+        println("Given two binary strings a and b, return their sum as a binary string.")
         println("(easy)add binary")
         val a = "11"
         val b = "1"
@@ -313,24 +314,27 @@ class ExampleUnitTest {
     }
 
     private fun addBinary(a: String, b: String): String {
-        val result = StringBuilder()
-        var carry = 0
+        val buffer = StringBuffer()
         var i = a.length - 1
         var j = b.length - 1
-        while (i >= 0 || j >= 0 || carry == 1) {
+        var carry = 0
+        while (i >= 0 || j >= 0) {
             var sum = carry
             if (i >= 0) {
-                sum += a[i].digitToInt()
+                sum += (a[i] - '0')
                 i--
             }
             if (j >= 0) {
-                sum += b[j].digitToInt()
+                sum += (b[j] - '0')
                 j--
             }
-            result.insert(0, sum % 2)
             carry = sum / 2
+            buffer.insert(0, sum % 2)
         }
-        return result.toString()
+        if (carry > 0) {
+            buffer.insert(0, 1)
+        }
+        return buffer.toString()
     }
 
     @Test //14
