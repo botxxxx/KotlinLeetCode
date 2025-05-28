@@ -570,14 +570,12 @@ class ExampleUnitTest {
         return root
     }
 
-    private fun maxDepth(root: TreeNode?, currentDepth: Int = 1): Int = when {
-        root == null -> 0
-        root.left == null && root.right == null -> currentDepth
-        else -> {
-            val right = maxDepth(root.right, currentDepth + 1)
-            val left = maxDepth(root.left, currentDepth + 1)
-            max(right, left)
-        }
+    private fun maxDepth(root: TreeNode?, currentDepth: Int = 1): Int {
+        if (root == null) return 0
+        if (root.left == null && root.right == null) return currentDepth
+        val left = maxDepth(root.left, currentDepth + 1)
+        val right = maxDepth(root.right, currentDepth + 1)
+        return max(left, right)
     }
 
     @Test //35
