@@ -527,7 +527,7 @@ class ExampleUnitTest {
         }
     }
 
-    @Test //32
+    @Test //104. Maximum Depth of Binary Tree
     fun maximumDepthOfABinaryTree() {
         println("(easy)maximum depth of binary tree")
         val root = TreeNode(3)
@@ -582,7 +582,8 @@ class ExampleUnitTest {
         return max(left, right)
     }
 
-    @Test //35
+    //230. Kth Smallest Element in a BST
+    @Test
     fun kthSmallestInBST() {
         println("(mind)kth smallest element in a BST")
         val arr = arrayOf(9, 5, 14, 3, 7, null, null, 1)
@@ -592,7 +593,6 @@ class ExampleUnitTest {
         println("Space complexity O(h)")
     }
 
-    //230. Kth Smallest Element in a BST
     private fun kthSmallest(root: TreeNode?, k: Int): Int {
         if (root == null || k <= 0) return -1
         val stack: LinkedList<TreeNode> = LinkedList()
@@ -601,7 +601,7 @@ class ExampleUnitTest {
 
         while (currentNode != null || stack.isNotEmpty()) {
             // push all currentNode.left in stack
-            while (currentNode != null){
+            while (currentNode != null) {
                 stack.push(currentNode)
                 currentNode = currentNode.left
             }
@@ -614,14 +614,18 @@ class ExampleUnitTest {
         return -1
     }
 
-    @Test //36
+    @Test //297. Serialize and Deserialize Binary Tree
     fun serializeAndDeserializeBinaryTree() {
         println("(hard)serialize and deserialize binary tree")
         val treeNode = TreeNode(1).apply {
             left = TreeNode(2)
             right = TreeNode(3)
-            right?.left = TreeNode(4)
-            right?.right = TreeNode(5)
+            left?.left = TreeNode(4)
+            left?.right = TreeNode(5)
+            right?.left = TreeNode(6)
+            right?.right = TreeNode(7)
+            left?.left?.left = TreeNode(8)
+            left?.left?.left?.left = TreeNode(9)
         }
         val serialize = serialize(treeNode)
         println("serialize:$serialize")
@@ -630,55 +634,41 @@ class ExampleUnitTest {
         println("Time complexity O(n)")
         println("Space complexity O(n)")
     }
+    private val NULL_MARKER = "N"
+    private val SEPARATOR = ","
 
     private fun serialize(root: TreeNode?): String {
-        if (root == null) return ""
-
+        if (root == null) return NULL_MARKER
         val sb = StringBuilder()
-        val queue = LinkedList<TreeNode?>()
-        queue.add(root)
-
-        while (queue.isNotEmpty()) {
-            val node = queue.poll()
-            if (node != null) {
-                if (sb.isNotEmpty()) {
-                    sb.append(",")
-                }
-                sb.append(node.`val`)
-                queue.add(node.left)
-                queue.add(node.right)
-            } else {
-                if (sb.isNotEmpty()) {
-                    sb.append(",")
-                }
-                sb.append("null")
-            }
-        }
+        serialize(root, sb)
         return sb.toString()
     }
 
-    private fun deserialize(data: String): TreeNode? {
-        if (data.isEmpty()) return null
-        val arr = data.split(",").toTypedArray()
-        val root = TreeNode(arr[0].toInt())
-        var i = 1
-        val queue = LinkedList<TreeNode?>()
-        queue.add(root)
-        while (i < arr.size) {
-            val node = queue.poll()
-            if (node != null) {
-                if (arr[i] != "null") {
-                    node.left = TreeNode(arr[i].toInt())
-                    queue.add(node.left)
-                }
-                i++
-                if (i < arr.size && arr[i] != "null") {
-                    node.right = TreeNode(arr[i].toInt())
-                    queue.add(node.right)
-                }
-                i++
-            }
+    private fun serialize(node: TreeNode?, sb: StringBuilder) {
+        if(node == null){
+            sb.append(NULL_MARKER).append(SEPARATOR)
+            return
         }
+        sb.append(node.`val`).append(SEPARATOR)
+        serialize(node.left, sb)
+        serialize(node.right, sb)
+    }
+
+    private fun deserialize(data: String): TreeNode? {
+        val nodes = data.split(SEPARATOR).toMutableList()
+        if(nodes.isEmpty() && nodes.last().isEmpty()){
+            nodes.removeLast()
+        }
+        return deserialize(nodes)
+    }
+
+    private fun deserialize(nodes: MutableList<String>): TreeNode? {
+        if(nodes.isEmpty()) return null
+        val value = nodes.removeFirst()
+        if (value == NULL_MARKER) return null
+        val root = TreeNode(value.toInt())
+        root.left = deserialize(nodes)
+        root.right = deserialize(nodes)
         return root
     }
 
