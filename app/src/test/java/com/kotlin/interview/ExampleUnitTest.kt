@@ -582,8 +582,7 @@ class ExampleUnitTest {
         return max(left, right)
     }
 
-    //230. Kth Smallest Element in a BST
-    @Test
+    @Test //230. Kth Smallest Element in a BST
     fun kthSmallestInBST() {
         println("(mind)kth smallest element in a BST")
         val arr = arrayOf(9, 5, 14, 3, 7, null, null, 1)
@@ -634,6 +633,7 @@ class ExampleUnitTest {
         println("Time complexity O(n)")
         println("Space complexity O(n)")
     }
+
     private val NULL_MARKER = "N"
     private val SEPARATOR = ","
 
@@ -645,7 +645,7 @@ class ExampleUnitTest {
     }
 
     private fun serialize(node: TreeNode?, sb: StringBuilder) {
-        if(node == null){
+        if (node == null) {
             sb.append(NULL_MARKER).append(SEPARATOR)
             return
         }
@@ -656,14 +656,14 @@ class ExampleUnitTest {
 
     private fun deserialize(data: String): TreeNode? {
         val nodes = data.split(SEPARATOR).toMutableList()
-        if(nodes.isEmpty() && nodes.last().isEmpty()){
+        if (nodes.isEmpty() && nodes.last().isEmpty()) {
             nodes.removeLast()
         }
         return deserialize(nodes)
     }
 
     private fun deserialize(nodes: MutableList<String>): TreeNode? {
-        if(nodes.isEmpty()) return null
+        if (nodes.isEmpty()) return null
         val value = nodes.removeFirst()
         if (value == NULL_MARKER) return null
         val root = TreeNode(value.toInt())
@@ -696,7 +696,7 @@ class ExampleUnitTest {
         return maxSum
     }
 
-    @Test //38
+    @Test //155. Min Stack
     fun minStack() {
         println("(easy)min stack")
         val minStack = MinStack().apply {
@@ -712,22 +712,22 @@ class ExampleUnitTest {
 
     class MinStack {
         private val stack = Stack<Int>()
-        private val minStack = Stack<Int>()
+        private val min = Stack<Int>()
 
         fun push(x: Int): Int {
             stack.push(x)
-            if (minStack.isEmpty() || x <= minStack.peek()) {
-                minStack.push(x)
+            if (min.isEmpty() || x <= min.peek()) {
+                min.push(x)
             }
             return stack.peek()
         }
 
         fun pop(): Int {
             val x = stack.pop()
-            if (x == minStack.peek()) {
-                minStack.pop()
+            if (x == min.peek()) {
+                min.pop()
             }
-            return stack.peek()
+            return x
         }
 
         fun top(): Int {
@@ -735,7 +735,7 @@ class ExampleUnitTest {
         }
 
         fun getMin(): Int {
-            return minStack.peek()
+            return min.peek()
         }
     }
 
