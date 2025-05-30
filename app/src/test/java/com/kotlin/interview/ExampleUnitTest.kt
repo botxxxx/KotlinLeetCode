@@ -592,23 +592,26 @@ class ExampleUnitTest {
         println("Space complexity O(h)")
     }
 
+    //230. Kth Smallest Element in a BST
     private fun kthSmallest(root: TreeNode?, k: Int): Int {
         if (root == null || k <= 0) return -1
+        val stack: LinkedList<TreeNode> = LinkedList()
+        var currentNode: TreeNode? = root
         var count = 0
-        var result = -1
-        fun inorder(node: TreeNode?) {
-            if (node?.left == null || count >= k) return
-            inorder(node.left)
-            count++
-            if (count == k) {
-                result = node.`val`
-                return
-            } else {
-                inorder(node.right)
+
+        while (currentNode != null || stack.isNotEmpty()) {
+            // push all currentNode.left in stack
+            while (currentNode != null){
+                stack.push(currentNode)
+                currentNode = currentNode.left
             }
+
+            currentNode = stack.pop()
+            count++
+            if (count == k) return currentNode.`val`
+            currentNode = currentNode.right
         }
-        inorder(root)
-        return result
+        return -1
     }
 
     @Test //36
