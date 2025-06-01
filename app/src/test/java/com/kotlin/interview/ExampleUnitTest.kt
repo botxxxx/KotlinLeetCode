@@ -337,28 +337,43 @@ class ExampleUnitTest {
         return buffer.toString()
     }
 
-    @Test //14
+    @Test //1. Two Sum
     fun twoSum() {
         println("(easy)two sum")
-        val nums = intArrayOf(2, 7, 11, 15)
+        val nums = intArrayOf(2, 11, 15, 7)
         val target = 9
         println("result:${twoSum(nums, target).joinToString()}")
         println("Time complexity O(n)")
         println("Space complexity O(n)")
     }
 
+//    private fun twoSum(nums: IntArray, target: Int): IntArray {
+//        val hashMap = HashMap<Int, Int>(nums.size)
+//        hashMap[nums[0]] = 0
+//        var i = 1
+//        while (i < nums.size) {
+//            val select = nums[i]
+//            if (hashMap.containsKey(target - select)) {
+//                return intArrayOf(target - select, i)
+//            } else {
+//                hashMap[select] = i
+//            }
+//            i++
+//        }
+//        return intArrayOf()
+//    }
+
     private fun twoSum(nums: IntArray, target: Int): IntArray {
         if (nums.size == 2) return intArrayOf(0, 1)
-        val hashMap = HashMap<Int, Int>(nums.size)
-        hashMap[nums[0]] = 0
-        var i = 1
-        while (i < nums.size) {
-            if (hashMap.containsKey(target - nums[i])) {
-                return intArrayOf(hashMap[target - nums[i]]!!, i)
-            } else {
-                hashMap[nums[i]] = i
-                i++
+        val map = IntArray(2048) { -1 }
+        for (currentIndex in nums.indices) {
+            val complement = target - nums[currentIndex]
+            val hashKey = complement and 2047
+            val findIndex = map[hashKey]
+            if (findIndex != -1 && nums[findIndex] == complement) {
+                return intArrayOf(findIndex, currentIndex)
             }
+            map[nums[currentIndex] and 2047] = currentIndex
         }
         return intArrayOf()
     }
