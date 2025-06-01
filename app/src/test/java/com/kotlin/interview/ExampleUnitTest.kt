@@ -899,6 +899,61 @@ class ExampleUnitTest {
         return -1
     }
 
+    @Test //912. Sort an Array
+    fun sortAnArray() {
+        println("(mind)sort an array")
+        val nums = intArrayOf(5, 2, 3, 1, 3, 1, 6, 7, 9)
+        println("result:${qSort(nums).joinToString()}")
+        println("Time complexity O(nlogn)")
+    }
+
+//    //Time Limit Exceeded
+//    private fun qSort(nums: IntArray): IntArray {
+//        if (nums.size < 2) return nums
+//        val pivotIndex = nums.size / 2
+//        val pivot = nums[pivotIndex]
+//        val leftList = mutableListOf<Int>()
+//        val middleList = mutableListOf<Int>() // To handle elements equal to the pivot
+//        val rightList = mutableListOf<Int>()
+//        for (element in nums) {
+//            when {
+//                element < pivot -> leftList.add(element)
+//                element == pivot -> middleList.add(element) // Collect elements equal to pivot
+//                else -> rightList.add(element)
+//            }
+//        }
+//        val left = qSort(leftList.toIntArray())
+//        val middle = middleList.toIntArray()
+//        val right = qSort(rightList.toIntArray())
+//        return left + middle + right
+//    }
+
+    private fun qSort(nums: IntArray, start: Int = 0, end: Int = nums.size - 1): IntArray {
+        if (start >= end) return nums
+        val pivotIndex = start + (end - start) / 2
+        val pivot = nums[pivotIndex]
+        var i = start
+        var j = end
+        while (i <= j) {
+            while (nums[i] < pivot) {
+                i++
+            }
+            while (nums[j] > pivot) {
+                j--
+            }
+            if (i <= j) {
+                val temp = nums[i]
+                nums[i] = nums[j]
+                nums[j] = temp
+                i++
+                j--
+            }
+        }
+        qSort(nums, start, j)
+        qSort(nums, i, end)
+        return nums
+    }
+
     @Test
     fun medianOfTwoSortedArrays() {
         println("(easy)median of two sorted arrays")
