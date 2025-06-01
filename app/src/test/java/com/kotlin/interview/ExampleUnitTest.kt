@@ -903,54 +903,64 @@ class ExampleUnitTest {
     fun sortAnArray() {
         println("(mind)sort an array")
         val nums = intArrayOf(5, 2, 3, 1, 3, 1, 6, 7, 9)
-        println("result:${qSort(nums).joinToString()}")
-        println("Time complexity O(nlogn)")
+        println("result:${mergeSort(nums).joinToString()}")
     }
 
-//    //Time Limit Exceeded
-//    private fun qSort(nums: IntArray): IntArray {
-//        if (nums.size < 2) return nums
-//        val pivotIndex = nums.size / 2
-//        val pivot = nums[pivotIndex]
-//        val leftList = mutableListOf<Int>()
-//        val middleList = mutableListOf<Int>() // To handle elements equal to the pivot
-//        val rightList = mutableListOf<Int>()
-//        for (element in nums) {
-//            when {
-//                element < pivot -> leftList.add(element)
-//                element == pivot -> middleList.add(element) // Collect elements equal to pivot
-//                else -> rightList.add(element)
-//            }
-//        }
-//        val left = qSort(leftList.toIntArray())
-//        val middle = middleList.toIntArray()
-//        val right = qSort(rightList.toIntArray())
-//        return left + middle + right
-//    }
-
-    private fun qSort(nums: IntArray, start: Int = 0, end: Int = nums.size - 1): IntArray {
-        if (start >= end) return nums
-        val pivotIndex = start + (end - start) / 2
-        val pivot = nums[pivotIndex]
-        var i = start
-        var j = end
-        while (i <= j) {
-            while (nums[i] < pivot) {
-                i++
+    private fun quickSort(nums: IntArray, left: Int = 0, right: Int = nums.size - 1): IntArray {
+        if (left >= right) return nums
+        val pivot = nums[left + (right - left) / 2]
+        var start = left
+        var end = right
+        while (start <= end) {
+            while (nums[start] < pivot) {
+                start++
             }
-            while (nums[j] > pivot) {
-                j--
+            while (nums[end] > pivot) {
+                end--
             }
-            if (i <= j) {
-                val temp = nums[i]
-                nums[i] = nums[j]
-                nums[j] = temp
-                i++
-                j--
+            if (start <= end) {
+                val temp = nums[start]
+                nums[start] = nums[end]
+                nums[end] = temp
+                start++
+                end--
             }
         }
-        qSort(nums, start, j)
-        qSort(nums, i, end)
+        if (left < end) {
+            quickSort(nums, left, end)
+        }
+        if (start < right) {
+            quickSort(nums, start, right)
+        }
+        return nums
+    }
+
+    private fun mergeSort(nums: IntArray): IntArray {
+        if (nums.size <= 1) return nums
+        val mid = nums.size / 2
+        val left = mergeSort(nums.sliceArray(0 until mid))
+        val right = mergeSort(nums.sliceArray(mid until nums.size))
+        return mergeSort(left, right)
+    }
+
+    private fun mergeSort(leftArray: IntArray, rightArray: IntArray): IntArray {
+        val nums = IntArray(leftArray.size + rightArray.size)
+        var n = 0
+        var left = 0
+        var right = 0
+        while (left < leftArray.size && right < rightArray.size) {
+            if (leftArray[left] < rightArray[right]) {
+                nums[n++] = leftArray[left++]
+            } else {
+                nums[n++] = rightArray[right++]
+            }
+        }
+        while (left < leftArray.size) {
+            nums[n++] = leftArray[left++]
+        }
+        while (right < rightArray.size) {
+            nums[n++] = rightArray[right++]
+        }
         return nums
     }
 
