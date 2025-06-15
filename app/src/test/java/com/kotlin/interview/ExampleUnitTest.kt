@@ -430,47 +430,64 @@ class ExampleUnitTest {
         return current
     }
 
-    @Test //18
+    @Test //76. Minimum Window Substring
     fun minimumWindowSubstring() {
         println("(hard)minimum window substring")
-        val s = "ADOBECODEBANC"
-        val t = "ABC"
-        println("result:${minWindow(s, t)}")
+        val strs = "ODOABECODEBAC"
+        val tag = "ABC"
+        println("result:${minWindow(strs, tag)}")
         println("Time complexity O(n)")
         println("Space complexity O(n)")
     }
 
-    private fun minWindow(s: String, t: String): String {
-        if (s.isEmpty() || t.isEmpty()) return ""
-
-        val charCount = IntArray(128) // Assuming ASCII characters
-        for (char in t) {
-            charCount[char.code]++
+    private fun minWindow(strs: String, tag: String): String {
+        if (strs.isEmpty() || strs.isEmpty()) return ""
+        val targetArray = IntArray(128) // Assuming ASCII characters
+        for (char in tag) {
+            val charCode = char.code
+            targetArray[charCode]++
         }
-
-        var left = 0
-        var right = 0
-        var minWindow = ""
-        var minLength = Int.MAX_VALUE
-        var count = t.length
-        while (right < s.length) {
-            val endCode = s[right].code
-            if (charCount[endCode] > 0) count--
-            charCount[endCode]--
-            right++
-
-            while (count == 0) {
-                if (right - left < minLength) {
-                    minLength = right - left
-                    minWindow = s.substring(left, right)
+        var windowEnd = 0
+        var minWindows = 0
+        var minWindowString = ""
+        var minWindowLength = Int.MAX_VALUE
+        var neededCharsCount = tag.length
+        while (windowEnd < strs.length) {
+            // Expand the window by including s[windowEnd]
+            val code = strs[windowEnd].code
+            // If s[windowEnd] is a character we are looking for (its frequency in t was > 0)
+            val sInTag = targetArray[code] > 0
+            if (sInTag) {
+                neededCharsCount--
+            }
+            targetArray[code]--
+            windowEnd++
+            var substring = strs.substring(minWindows, windowEnd)
+            println("windowEnd:$windowEnd($substring), neededCharsCount:$neededCharsCount")
+            while (neededCharsCount == 0) {
+                // Update minimum window if current one is smaller
+                substring = strs.substring(minWindows, windowEnd)
+                println("minWindows:$minWindows($substring)")
+                if (substring.length < minWindowLength) {
+                    minWindowLength = substring.length
+                    minWindowString = strs.substring(minWindows, windowEnd)
+                    println("*update $minWindowString, ($minWindowLength)")
+                } else {
+                    println("skip $substring, ($minWindowLength)")
                 }
-                val startCode = s[left].code
-                charCount[startCode]++
-                if (charCount[startCode] > 0) count++
-                left++
+                // Try to shrink the window by removing s[windowStart]
+                val endCode = strs[minWindows].code
+                // "Return" the character s[windowStart] to the pool of needed characters.
+                targetArray[endCode]++
+                val endInTag = targetArray[endCode] > 0
+                if (endInTag) {
+                    neededCharsCount++
+                }
+                minWindows++ // Shrink the window from the left
+                println("minWindows:$minWindows, neededCharsCount:$neededCharsCount")
             }
         }
-        return minWindow
+        return minWindowString
     }
 
     @Test //19
